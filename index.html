@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>الحفيظ - قصص الحفظ والورد اليومي</title>
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@300;400;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Driver.js for Guided Tour -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css" />
+    <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Intro Modal Video -->
+    <div id="intro-modal" class="modal-overlay">
+        <div class="intro-content">
+            <h2
+                style="margin-bottom: 1rem; font-family: 'IBM Plex Sans Arabic', sans-serif; font-weight: 600; font-size: 1.4rem;">
+                مقطع توعوي بالشراكة مع أخواننا في المجموعة الأخرى</h2>
+            <div class="intro-video-container">
+                <!-- تم إزالة خاصية muted ليعمل الصوت مباشرة -->
+                <video class="intro-video" controls autoplay>
+                    <source
+                        src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663175911747/fFrqYMJoceqpcvVj.mp4"
+                        type="video/mp4">
+                    متصفحك لا يدعم الفيديو.
+                </video>
+            </div>
+
+            <div class="intro-check-container">
+                <input type="checkbox" id="dont-show-again">
+                <label for="dont-show-again">لا تظهر هذا مجدداً</label>
+            </div>
+
+            <button onclick="closeIntro()" style="width: 100%; padding: 1rem;">الدخول للموقع</button>
+        </div>
+    </div>
+
+    <!-- Page Guide Toast -->
+    <div id="page-guide">
+        <i id="guide-icon" data-lucide="info"></i>
+        <span id="guide-text"></span>
+    </div>
+
+    <canvas id="aurora-canvas"></canvas>
+
+    <div id="status-msg">تم الحفظ بنجاح</div>
+
+    <!-- Custom Confirmation Modal -->
+    <div id="confirm-modal" class="modal-overlay">
+        <div class="card"
+            style="max-width: 350px; margin: 0 1rem; text-align: center; border-color: rgba(255,255,255,0.3);">
+            <div style="margin-bottom: 1.5rem;">
+                <i data-lucide="alert-circle" style="width: 48px; height: 48px; opacity: 0.8;"></i>
+            </div>
+            <h3 style="margin-bottom: 0.5rem;">تأكيد الإجراء</h3>
+            <p id="confirm-message" style="opacity: 0.7; margin-bottom: 2rem;">هل أنت متأكد؟</p>
+            <div class="button-group" style="justify-content: center; gap: 1rem;">
+                <button id="confirm-yes-btn" style="flex: 1;">نعم</button>
+                <button onclick="closeConfirmModal()" class="btn-outline" style="flex: 1;">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container" id="main-content">
+        <header>
+            <div class="brand-name">الحفيظ</div>
+            <nav class="nav-links">
+                <!-- Added IDs for Driver.js targets -->
+                <div id="nav-home" class="nav-item active" onclick="showPage('home')">الرئيسية</div>
+                <div id="nav-stories" class="nav-item" onclick="showPage('stories')">مواقف وعِبر</div>
+                <div id="nav-radio" class="nav-item" onclick="showPage('radio')">إذاعة القرآن</div>
+                <div id="nav-sakina" class="nav-item ai-feature" onclick="showPage('sakina')">
+                    متضايق ؟
+                </div>
+                <div id="nav-wird" class="nav-item" onclick="showPage('wird')">الورد اليومي</div>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Home Section with Pulse Orb Carousel -->
+            <section id="home-page" class="page-section active">
+                <div style="text-align: center; margin: 3rem 0;">
+                    <!-- تم تعديل letter-spacing من -1px إلى 0 لحل مشكلة التلاصق -->
+                    <h1 style="font-size: 3.5rem; margin-bottom: 1.5rem; letter-spacing: 0; line-height: 1.5;">إِذَا
+                        أَرَادَ شَيْئًا أَن يَقُولَ لَهُ كُن فَيَكُونُ</h1>
+                    <p style="font-size: 1.1rem; opacity: 0.6; font-weight: 300; max-width: 600px; margin: 0 auto;">هو
+                        الذي يحفظ ويصون كل ما خلق،</p>
+                </div>
+
+                <div class="carousel-scene">
+                    <div id="orb-container" style="position: relative; width: 100%; height: 100%;">
+                        <!-- Orb 1 -->
+                        <div class="carousel-cell active">
+                            <p style="font-size: 1.1rem; font-family: 'IBM Plex Sans Arabic'; line-height: 1.6;">"إِنَّ
+                                رَبِّي عَلَىٰ كُلِّ شَيْءٍ حَفِيظٌ"</p>
+                        </div>
+                        <!-- Orb 2 -->
+                        <div class="carousel-cell">
+                            <p style="font-size: 1.1rem; font-family: 'IBM Plex Sans Arabic'; line-height: 1.6;">
+                                "فَاللَّهُ خَيْرٌ حَافِظًا ۖ وَهُوَ أَرْحَمُ الرَّاحِمِينَ"</p>
+                        </div>
+                        <!-- Orb 3 -->
+                        <div class="carousel-cell">
+                            <p style="font-size: 1.1rem; font-family: 'IBM Plex Sans Arabic'; line-height: 1.6;">"وَهُوَ
+                                الْقَاهِرُ فَوْقَ عِبَادِهِ ۖ وَيُرْسِلُ عَلَيْكُمْ حَفَظَةً"</p>
+                        </div>
+                        <!-- Orb 4 -->
+                        <div class="carousel-cell">
+                            <p style="font-size: 1.1rem; font-family: 'IBM Plex Sans Arabic'; line-height: 1.6;">"لَهُ
+                                مُعَقِّبَاتٌ مِّن بَيْنِ يَدَيْهِ وَمِنْ خَلْفِهِ يَحْفَظُونَهُ مِنْ أَمْرِ اللَّهِ"</p>
+                        </div>
+                    </div>
+
+                    <div class="carousel-controls">
+                        <button class="carousel-btn" onclick="switchOrb(1)"><i data-lucide="chevron-right"></i></button>
+                        <button class="carousel-btn" onclick="switchOrb(-1)"><i data-lucide="chevron-left"></i></button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stories Section -->
+            <section id="stories-page" class="page-section">
+                <h1 style="margin-bottom: 3rem; font-size: 2.5rem;">مواقف ومعجزات الحفظ</h1>
+
+                <div class="tabs-container">
+                    <div class="toggle-capsule" style="width: 100%; display: flex;">
+                        <div id="tabs-highlight" style="width: 33.33%;"></div>
+                        <button class="toggle-btn active" style="flex: 1; width: auto;" id="btn-mode-users"
+                            onclick="setStoryMode('users')">
+                            قصص الناس
+                            <i data-lucide="users" style="width: 16px;"></i>
+                        </button>
+                        <button class="toggle-btn" style="flex: 1; width: auto;" id="btn-mode-share"
+                            onclick="setStoryMode('share')">
+                            شارك
+                            <i data-lucide="pen-tool" style="width: 16px;"></i>
+                        </button>
+                        <button class="toggle-btn" style="flex: 1; width: auto;" id="btn-mode-history"
+                            onclick="setStoryMode('history')">
+                            قصص الأولين
+                            <i data-lucide="scroll" style="width: 16px;"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="stories-share-container" style="display: none;">
+                    <div class="card">
+                        <h3 style="margin-bottom: 1rem;">دون موقفك</h3>
+                        <p style="font-size: 0.9rem; margin-bottom: 2rem; opacity: 0.8;">اجعل من قصتك أملاً لغيرك، واذكر
+                            فضل الله عليك.</p>
+                        <input type="text" id="story-author" placeholder="الاسم (أو اتركه فارغاً)">
+                        <textarea id="story-content" rows="5" placeholder="اروي لنا كيف حفظك الله..."></textarea>
+
+                        <div class="button-group">
+                            <button onclick="saveStory()">نشر القصة</button>
+                            <button class="btn-ai" onclick="refineStory()" id="refine-btn">
+                                <span>تحسين الصياغة (AI)</span>
+                                <i data-lucide="sparkles" style="width: 16px;"></i>
+                                <div class="loader" id="refine-loader"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="stories-read-container">
+                    <div id="stories-list">
+                        <!-- Stories will appear here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quran Radio Section -->
+            <section id="radio-page" class="page-section">
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">إذاعة القرآن الكريم</h1>
+                    <p style="opacity: 0.6;">استمع إلى تلاوات عطرة بأصوات نخبة من القراء.</p>
+                </div>
+
+                <!-- Main Player Card -->
+                <div class="card" id="radio-player-card"
+                    style="text-align: center; position: relative; overflow: hidden;">
+                    <div id="radio-visualizer"
+                        style="position: absolute; bottom: 0; left: 0; width: 100%; height: 60%; opacity: 0.3; pointer-events: none;">
+                        <!-- Bars will be generated by JS -->
+                    </div>
+
+                    <div style="position: relative; z-index: 2;">
+                        <div
+                            style="width: 120px; height: 120px; margin: 0 auto 1.5rem; background: rgba(255,255,255,0.05); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 0 30px rgba(0,0,0,0.3);">
+                            <i data-lucide="radio" style="width: 50px; height: 50px; opacity: 0.8;"></i>
+                        </div>
+
+                        <h2 id="current-station-name" style="margin-bottom: 0.5rem;">اختر إذاعة للبدء</h2>
+                        <p id="player-status" style="font-size: 0.9rem; opacity: 0.6; margin-bottom: 2rem;">متوقف</p>
+
+                        <div class="player-controls"
+                            style="display: flex; justify-content: center; align-items: center; gap: 2rem;">
+                            <button class="control-btn-lg" onclick="toggleRadio()">
+                                <i id="play-icon" data-lucide="play" style="fill: currentColor;"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <audio id="radio-audio" preload="none" crossOrigin="anonymous"></audio>
+
+                    <!-- Volume Control (Integrated) -->
+                    <div class="volume-sidebar integrated">
+                        <input type="range" min="0" max="1" step="0.01" value="1" orient="vertical"
+                            oninput="setVolume(this.value)">
+                        <i id="vol-icon" data-lucide="volume-2"></i>
+                    </div>
+                </div>
+
+                <!-- Stations Grid -->
+                <h3
+                    style="margin-bottom: 1.5rem; margin-right: 0.5rem; border-right: 3px solid var(--ivory-white); padding-right: 1rem;">
+                    الإذاعات المتاحة</h3>
+                <div class="stations-grid" id="stations-container">
+                    <!-- Stations will be generated here -->
+                </div>
+            </section>
+
+            <!-- Sakina Section (Modified In-Place) -->
+            <section id="sakina-page" class="page-section">
+                <div style="text-align: center; margin-bottom: 3rem;">
+                    <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">رسالة سكينة</h1>
+                    <p style="opacity: 0.6;">فضفض بما يثقل قلبك، ودعنا نختار لك كلمات من نور تواسي روحك.</p>
+                </div>
+
+                <div class="card" id="sakina-card"
+                    style="min-height: 350px; display: flex; flex-direction: column; justify-content: center;">
+                    <!-- Input View -->
+                    <div id="sakina-input-view" style="width: 100%; transition: opacity 0.4s ease;">
+                        <textarea id="sakina-input" rows="5"
+                            placeholder="بم تشعر الآن؟ (مثلاً: أشعر بقلق من المستقبل، أو ضيق بلا سبب...)"></textarea>
+                        <button class="btn-ai" style="width: 100%; justify-content: center;"
+                            onclick="getSakinaMessage()">
+                            <span id="sakina-btn-text" style="display: flex; align-items: center; gap: 0.5rem;">
+                                التمس السكينة
+                                <i data-lucide="sparkles" style="width: 16px;"></i>
+                            </span>
+                            <div class="loader" id="sakina-loader"></div>
+                        </button>
+                    </div>
+
+                    <!-- Result View (Hidden initially) -->
+                    <div id="sakina-result-view"
+                        style="display: none; opacity: 0; width: 100%; height: 100%; text-align: center; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+                        <button onclick="closeSakinaResult()" class="sakina-close-btn" title="إغلاق">
+                            <i data-lucide="x" style="width: 18px;"></i>
+                        </button>
+
+                        <div style="margin-bottom: 1.5rem;">
+                            <i data-lucide="heart-handshake" style="width: 40px; height: 40px; opacity: 0.9;"></i>
+                        </div>
+                        <h3 style="margin-bottom: 1.5rem; font-size: 1.8rem; font-family: 'Aref Ruqaa';">رسالتك</h3>
+                        <p id="sakina-text"
+                            style="font-size: 1.3rem; line-height: 2; max-width: 90%; margin: 0 auto; color: var(--ivory-white);">
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Wird Section -->
+            <section id="wird-page" class="page-section">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem;">
+                    <div>
+                        <h1 style="font-size: 2.5rem;">الورد اليومي</h1>
+                        <p style="opacity: 0.5;">سجل وردك وتابع إنجازك بذكر الله.</p>
+                    </div>
+                    <div class="button-group">
+                        <button onclick="toggleWirdForm()" class="btn-outline"
+                            style="padding: 0.5rem 1rem; font-size: 0.8rem; border-radius: 8px;">
+                            <i data-lucide="plus"
+                                style="width: 16px; display: inline-block; vertical-align: middle;"></i> تخصيص
+                        </button>
+                        <button onclick="resetWird()" class="btn-outline"
+                            style="padding: 0.5rem 1rem; font-size: 0.8rem; border-radius: 8px;">تصفير العداد</button>
+                    </div>
+                </div>
+
+                <div id="add-wird-form" class="card" style="border-color: rgba(255,255,255,0.4);">
+                    <h3 style="margin-bottom: 1rem;">إضافة ورد جديد</h3>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <input type="text" id="new-wird-text" placeholder="نص الذكر (مثلاً: لا حول ولا قوة إلا بالله)"
+                            style="flex: 2; margin-bottom: 0;">
+                        <input type="number" id="new-wird-target" placeholder="العدد" value="100"
+                            style="flex: 1; margin-bottom: 0;">
+                    </div>
+                    <button onclick="addWird()" style="width: 100%; margin-top: 1rem;">إضافة للقائمة</button>
+                </div>
+
+                <div class="card">
+                    <div id="wird-container">
+                        <!-- Wird items will be generated here -->
+                    </div>
+                </div>
+
+                <div class="card" style="text-align: center;">
+                    <h3 style="font-family: 'IBM Plex Sans Arabic'; font-weight: 400; font-size: 1rem; opacity: 0.7;">
+                        معدل إنجازك اليوم</h3>
+                    <div id="total-counts" style="font-family: 'Aref Ruqaa'; font-size: 3rem; margin: 1rem 0;">0</div>
+                    <div class="progress-container">
+                        <div id="progress-bar"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="team-title">فريق العمل</div>
+            <div class="team-names">يزيد خليل - يحيى ايوب - فيصل عفيف - فيصل بافضل</div>
+            <div style="margin-top: 1rem;">
+                <button onclick="restartTour()" class="btn-outline"
+                    style="padding: 0.5rem 1rem; font-size: 0.8rem; opacity: 0.5;">
+                    <i data-lucide="play-circle"
+                        style="width: 14px; display: inline-block; vertical-align: middle;"></i>
+                    إعادة الجولة
+                </button>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

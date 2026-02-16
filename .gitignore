@@ -1,0 +1,18 @@
+# OS & IDE Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Node modules (if any future use)
+node_modules/
+npm-debug.log
+
+# Backup files
+*.bak
+*.tmp
+*~
+
+# Build output
+dist/
+build/
