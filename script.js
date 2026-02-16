@@ -432,22 +432,33 @@ let stories = JSON.parse(localStorage.getItem('user_stories')) || [
 
 // --- Quran Radio Logic ---
 const stations = [
-    // Live Radios from Saudi Arabia
-    { name: "إذاعة القرآن الكريم - السعودية", url: "https://stream.radiojar.com/4wqre23fytzuv" },
+    // Live Radios from Saudi Arabia (Ensure HTTPS)
     { name: "إذاعة الحرم المكي - مباشر", url: "https://stream.radiojar.com/0tpy1h0kxtzuv" },
-    { name: "إذاعة الحرم النبوي - مباشر", url: "https://stream.radiojar.com/4wqre23fytzuv" }, // Fallback/Shared stream often used
+    { name: "إذاعة الحرم النبوي - مباشر", url: "https://stream.radiojar.com/4wqre23fytzuv" },
 
-    // Top Saudi Reciters
-    { name: "ماهر المعيقلي", url: "https://backup.qurango.net/radio/maher_al_muaiqly" },
+    // Top Saudi Reciters (Ensure HTTPS)
+    { name: "ماهر المعيقلي", url: "https://backup.qurango.net/radio/maher" },
     { name: "ياسر الدوسري", url: "https://backup.qurango.net/radio/yasser_aldosari" },
     { name: "عبدالرحمن السديس", url: "https://backup.qurango.net/radio/abdulrahman_alsudaes" },
     { name: "سعود الشريم", url: "https://backup.qurango.net/radio/saud_alshuraim" },
     { name: "سعد الغامدي", url: "https://backup.qurango.net/radio/saad_alghamdi" },
-    { name: "بندر بليلة", url: "https://backup.qurango.net/radio/bandar_balila" },
-    { name: "ناصر القطامي", url: "https://backup.qurango.net/radio/nasser_alqatam" },
+    { name: "بندر بليلة", url: "https://backup.qurango.net/radio/bandar_balilah" },
+    { name: "ناصر القطامي", url: "https://backup.qurango.net/radio/nasser_alqatami" },
     { name: "خالد الجليل", url: "https://backup.qurango.net/radio/khalid_aljileel" },
     { name: "عبدالله الجهني", url: "https://backup.qurango.net/radio/abdullah_aljohany" }
 ];
+
+// Unlock AudioContext on mobile touch
+document.addEventListener('touchstart', function () {
+    if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+}, { once: true });
+document.addEventListener('click', function () {
+    if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+}, { once: true });
 
 let currentStationIndex = -1;
 let isPlaying = false;

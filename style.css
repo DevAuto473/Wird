@@ -372,6 +372,30 @@
             box-shadow: 0 2px 10px rgba(248, 240, 227, 0.3);
         }
 
+        #radio-visualizer .bar {
+            width: 6px;
+            background: var(--ivory-white);
+            border-radius: 4px 4px 0 0;
+            transition: height 0.05s ease;
+            will-change: height;
+            opacity: 0.4;
+            /* Reduced opacity as requested */
+        }
+
+        /* Glassy Status Badge */
+        #player-status {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 16px;
+            border-radius: 20px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
         .toggle-btn {
             position: relative;
             z-index: 2;
@@ -1152,6 +1176,40 @@
                 background: rgba(255, 255, 255, 0.03);
                 padding: 0.5rem;
                 border-radius: 12px;
+            }
+
+            /* Radio Mobile Fixes */
+            .volume-sidebar.integrated {
+                right: 5px;
+                /* Adjust valid spacing */
+                padding: 8px 4px;
+                bottom: 50%;
+                transform: translateY(50%);
+                background: rgba(0, 0, 0, 0.5);
+                /* Higher contrast */
+            }
+
+            .volume-sidebar input[type=range] {
+                width: 6px;
+                height: 70px;
+                /* Shorter slider for mobile */
+            }
+
+            /* Ensure Station Grid flows well */
+            .stations-grid {
+                grid-template-columns: repeat(2, 1fr);
+                /* 2 columns on mobile */
+                gap: 0.8rem;
+            }
+
+            /* Intro Video Fix */
+            .intro-video-container {
+                position: relative;
+                z-index: 10;
+                background: #000;
+                /* Fallback bg */
+                display: block;
+                height: auto;
             }
         }
 
