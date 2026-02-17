@@ -503,7 +503,9 @@ function initAudioContext() {
 let gainNode;
 
 function setVolume(val) {
-    const volume = val / 100;
+    // Input is 0.0 to 1.0 from HTML slider
+    const volume = parseFloat(val);
+
     if (gainNode) {
         gainNode.gain.value = volume;
     }
