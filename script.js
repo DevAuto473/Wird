@@ -476,24 +476,39 @@ function initAudioContext() {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         audioCtx = new AudioContext();
         analyser = audioCtx.createAnalyser();
-        analyser.fftSize = 64; // Small size for fewer bars (32 bins)
-        analyser.smoothingTimeConstant = 0.9; // Smooths out the jitter
+        analyser.fftSize = 64;
+        analyser.smoothingTimeConstant = 0.9;
+
+        gainNode = audioCtx.createGain(); // Create GainNode for volume
 
         // Connect audio element to analyser
         if (audioObj) {
             try {
+                audioObj.crossOrigin = "anonymous";
                 source = audioCtx.createMediaElementSource(audioObj);
                 source.connect(analyser);
-                analyser.connect(audioCtx.destination);
+                analyser.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
             } catch (e) {
-                console.error("Error creating MediaElementSource (likely CORS):", e);
-                // Fallback for CORS: The audio will play, but visualizer might be silent.
-                // We can implement a fake visualizer here if needed, or valid CORS streams.
+                console.error("Error creating MediaElementSource:", e);
             }
         }
 
         const bufferLength = analyser.frequencyBinCount;
         dataArray = new Uint8Array(bufferLength);
+    }
+}
+
+// Global GainNode variable
+let gainNode;
+
+function setVolume(val) {
+    const volume = val / 100;
+    if (gainNode) {
+        gainNode.gain.value = volume;
+    }
+    if (audioObj) {
+        audioObj.volume = volume;
     }
 }
 
