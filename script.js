@@ -1045,28 +1045,32 @@ window.onload = () => {
     renderStories();
     startOrbAutoPlay();
 
-    // 1. Check Tour FIRST (Priority Request)
+    // 1. Logic to Sequence Intro Video -> Then Tour
     const tourSeen = localStorage.getItem('tourSeen');
     const hideIntro = localStorage.getItem('hideIntro');
 
-    if (!tourSeen) {
-        // If first visit ever, start tour immediately after specific delay
+    if (!hideIntro) {
+        // CASE A: Show Video First
+        // The modal is shown. When closed, closeIntro() will check !tourSeen and start tour.
+        const introModal = document.getElementById('intro-modal');
+        introModal.style.display = 'flex';
+        introModal.style.opacity = '1';
+
+        // Ensure main content is blurred while video is up
+        document.getElementById('main-content').style.filter = 'blur(5px)';
+    }
+    else if (!tourSeen) {
+        // CASE B: Video is hidden by preference, but Tour not seen
+        // Start tour immediately
+        document.getElementById('main-content').style.filter = 'blur(0)';
         setTimeout(() => {
             startTour();
             localStorage.setItem('tourSeen', 'true');
-        }, 1500); // 1.5s delay to ensure UI is ready
+        }, 1000);
     }
-
-    // 2. Check Intro Video
-    if (!hideIntro) {
-        // Show video modal (it will be behind tour popover due to z-index)
-        document.getElementById('intro-modal').style.display = 'flex';
-    } else {
+    else {
+        // CASE C: Regular visit (No Video, No Tour)
         document.getElementById('main-content').style.filter = 'blur(0)';
-
-        // If returning user (tour seen) & no video needed -> show guide
-        if (tourSeen) {
-            showPageIntro('home');
-        }
+        showPageIntro('home');
     }
 };
