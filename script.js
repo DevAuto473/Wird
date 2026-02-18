@@ -639,29 +639,60 @@ function startVisualizerLoop() {
 
         animationId = requestAnimationFrame(animate);
 
+        // Try to get real data
         analyser.getByteFrequencyData(dataArray);
 
-        // Symmetrical Mapping: Center is Bass (Index 0 of dataArray)
-        const centerIdx = Math.floor(barCount / 2);
+        // Check if we have valid data (CORS often returns all zeros)
+        const hasData = dataArray.some(val => val > 0);
 
-        for (let i = 0; i < barCount; i++) {
-            // Calculate distance from center (0 at center, higher at edges)
-            const dist = Math.abs(i - centerIdx);
+        if (hasData) {
+            // --- REAL VISUALIZER ---
+            // Symmetrical Mapping: Center is Bass
+            const centerIdx = Math.floor(barCount / 2);
 
-            // Map distance to frequency index (Low freq at center, High at edges)
-            // We use smaller steps for data index to keep within bass/mid range mostly
-            const dataIndex = Math.min(dist, dataArray.length - 1);
+            for (let i = 0; i < barCount; i++) {
+                const dist = Math.abs(i - centerIdx);
+                // Map bar index to frequency bin (lower bins = bass)
+                // We use fewer bins for the center (bass) and higher for edges
+                const freqIdx = Math.floor(dist * (dataArray.length / (barCount / 2)));
 
-            const value = dataArray[dataIndex];
-            const percent = (value / 255) * 100;
-            const height = Math.max(5, percent * 0.8); // Scale down slightly to fit
+                const value = dataArray[Math.min(freqIdx, dataArray.length - 1)] || 0;
+                const percent = (value / 255) * 100;
+                const height = Math.max(5, percent);
 
-            if (bars[i]) {
-                bars[i].style.height = `${height}%`;
+                if (bars[i]) bars[i].style.height = `${height}%`;
+            }
+        } else {
+            // --- FAKE VISUALIZER (Fallback) ---
+            // Gentle wave/random animation
+            const time = Date.now() / 200;
+            for (let i = 0; i < barCount; i++) {
+                // Combine sine waves for organic look
+                const wave1 = Math.sin(time + (i * 0.5));
+                const wave2 = Math.sin((time * 0.5) + (i * 0.2));
+                const h = 20 + (wave1 * 10 + wave2 * 10);
+
+                if (bars[i]) bars[i].style.height = `${Math.max(5, h)}%`;
             }
         }
     }
+
     animate();
+}
+// Map distance to frequency index (Low freq at center, High at edges)
+// We use smaller steps for data index to keep within bass/mid range mostly
+const dataIndex = Math.min(dist, dataArray.length - 1);
+
+const value = dataArray[dataIndex];
+const percent = (value / 255) * 100;
+const height = Math.max(5, percent * 0.8); // Scale down slightly to fit
+
+if (bars[i]) {
+    bars[i].style.height = `${height}%`;
+}
+        }
+    }
+animate();
 }
 
 function stopVisualizerLoop() {
