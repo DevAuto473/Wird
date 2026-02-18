@@ -663,14 +663,25 @@ function startVisualizerLoop() {
                 if (bars[i]) bars[i].style.height = `${height}%`;
             }
         } else {
-            // --- FAKE VISUALIZER (Fallback) ---
-            // Gentle wave/random animation
-            const time = Date.now() / 200;
+            // --- FAKE VISUALIZER (Fallback for Mobile/CORS) ---
+            // Simulate lively bar movement instead of just a wave
+            const time = Date.now();
+
             for (let i = 0; i < barCount; i++) {
-                // Combine sine waves for organic look
-                const wave1 = Math.sin(time + (i * 0.5));
-                const wave2 = Math.sin((time * 0.5) + (i * 0.2));
-                const h = 20 + (wave1 * 10 + wave2 * 10);
+                // Generate a "pseudorandom" but smooth value based on time and index
+                // We use multiple sine waves to create chaotic but rhythmic movement
+                const noise = Math.sin(time * 0.005 + i * 0.5)
+                    + Math.sin(time * 0.01 + i * 1.5) * 0.5;
+
+                // Map to 0-100% height, keeping it dynamic
+                // Base height 10% + Dynamic 0-60%
+                let h = 10 + Math.abs(noise) * 60;
+
+                // Make center bars generally taller (Bass effect simulation)
+                const centerIdx = barCount / 2;
+                const dist = Math.abs(i - centerIdx);
+                const scale = 1 - (dist / (barCount / 1.5)); // Fade out at edges
+                h *= Math.max(0.2, scale);
 
                 if (bars[i]) bars[i].style.height = `${Math.max(5, h)}%`;
             }
@@ -679,21 +690,7 @@ function startVisualizerLoop() {
 
     animate();
 }
-// Map distance to frequency index (Low freq at center, High at edges)
-// We use smaller steps for data index to keep within bass/mid range mostly
-const dataIndex = Math.min(dist, dataArray.length - 1);
 
-const value = dataArray[dataIndex];
-const percent = (value / 255) * 100;
-const height = Math.max(5, percent * 0.8); // Scale down slightly to fit
-
-if (bars[i]) {
-    bars[i].style.height = `${height}%`;
-}
-        }
-    }
-animate();
-}
 
 function stopVisualizerLoop() {
     if (animationId) cancelAnimationFrame(animationId);
@@ -1087,7 +1084,7 @@ window.addEventListener('mousemove', (e) => {
     mouse.y = e.clientY;
 });
 
-window.onload = () => {
+window.addEventListener('load', () => {
     initCanvas();
     animate();
     renderStories();
@@ -1096,29 +1093,37 @@ window.onload = () => {
     // 1. Logic to Sequence Intro Video -> Then Tour
     const tourSeen = localStorage.getItem('tourSeen');
     const hideIntro = localStorage.getItem('hideIntro');
+    const introModal = document.getElementById('intro-modal');
+    const mainContent = document.getElementById('main-content');
 
-    if (!hideIntro) {
-        // CASE A: Show Video First
-        // The modal is shown. When closed, closeIntro() will check !tourSeen and start tour.
-        const introModal = document.getElementById('intro-modal');
-        introModal.style.display = 'flex';
-        introModal.style.opacity = '1';
+    if (introModal && mainContent) {
+        if (!hideIntro) {
+            // CASE A: Show Video First
+            introModal.style.display = 'flex';
+            introModal.style.opacity = '1';
+            mainContent.style.filter = 'blur(5px)';
+        }
+        else if (!tourSeen) {
+            // CASE B: Tour Only
+            mainContent.style.filter = 'blur(0)';
+            setTimeout(() => {
+                startTour();
+                localStorage.setItem('tourSeen', 'true');
+            }, 1000);
+        }
+        else {
+            // CASE C: Regular visit
+            introModal.style.display = 'none';
+            mainContent.style.filter = 'blur(0)';
+            showPageIntro('home');
+        }
 
-        // Ensure main content is blurred while video is up
-        document.getElementById('main-content').style.filter = 'blur(5px)';
-    }
-    else if (!tourSeen) {
-        // CASE B: Video is hidden by preference, but Tour not seen
-        // Start tour immediately
-        document.getElementById('main-content').style.filter = 'blur(0)';
+        // Safety: If modal is hidden, ensure no blur remains
         setTimeout(() => {
-            startTour();
-            localStorage.setItem('tourSeen', 'true');
-        }, 1000);
+            const style = window.getComputedStyle(introModal);
+            if (style.display === 'none' || style.visibility === 'hidden') {
+                mainContent.style.filter = 'blur(0)';
+            }
+        }, 500);
     }
-    else {
-        // CASE C: Regular visit (No Video, No Tour)
-        document.getElementById('main-content').style.filter = 'blur(0)';
-        showPageIntro('home');
-    }
-};
+});

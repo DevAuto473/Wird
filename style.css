@@ -1180,19 +1180,53 @@
 
             /* Radio Mobile Fixes */
             .volume-sidebar.integrated {
-                right: 5px;
-                /* Adjust valid spacing */
-                padding: 8px 4px;
-                bottom: 50%;
-                transform: translateY(50%);
-                background: rgba(0, 0, 0, 0.5);
-                /* Higher contrast */
+                right: 0;
+                /* Stick to right edge */
+                top: 50%;
+                transform: translateY(-50%);
+                height: 150px;
+                /* Container height */
+                width: 40px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background: rgba(0, 0, 0, 0.6);
+                /* Clearer background */
+                border-radius: 20px 0 0 20px;
+                z-index: 100;
             }
 
             .volume-sidebar input[type=range] {
-                width: 6px;
-                height: 70px;
-                /* Shorter slider for mobile */
+                /* Cross-browser vertical slider using rotation */
+                width: 100px;
+                /* Physical width before rotation acts as height */
+                height: 20px;
+                /* Touch target thickness */
+                transform: rotate(-90deg);
+                transform-origin: center;
+                margin: 0;
+                appearance: none;
+                /* Strip default styles */
+                background: rgba(255, 255, 255, 0.2);
+                border-radius: 10px;
+                cursor: pointer;
+            }
+
+            /* Add thumb styling for mobile */
+            .volume-sidebar input[type=range]::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                width: 20px;
+                height: 20px;
+                background: var(--gold-accent);
+                border-radius: 50%;
+                cursor: pointer;
+            }
+
+            .volume-sidebar i {
+                margin-top: auto;
+                /* Push icon to bottom */
+                margin-bottom: 10px;
             }
 
             /* Ensure Station Grid flows well */
